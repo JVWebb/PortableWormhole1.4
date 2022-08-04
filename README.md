@@ -1,4 +1,7 @@
 # PortableWormhole1.4
-A mod for Terraria that adds a Portable Wormhole that's crafted at a Crystal Ball from 30 Wormhole potions.
+This mod adds a Portable Wormhole mirror which is crafted from 30 Wormhole Potions at a Crystal Ball.
 
-Ported to 1.4
+The Portable Wormhole is non-consumable and lets you teleport to teammates as if you had a wormhole potion. It also lets you teleport to town NPCs.
+
+
+Original mod by DaeCatt (https://github.com/DaeCatt/PortableWormhole). Ported to 1.4 and resprited by Stonga
