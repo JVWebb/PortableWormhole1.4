@@ -1,3 +1,3 @@
-This mod adds the Portable Wormhole that's crafted at a Crystal Ball from 30 Wormhole potions.
+This mod adds a Portable Wormhole mirror which is crafted from 1 dirt block.
 
-The Portable Wormhole lets you teleport to teammates as if you had a wormhole potion, but also lets you teleport to town NPCs.
+The Portable Wormhole lets you teleport to teammates as if you had a wormhole potion. It also lets you teleport to town NPCs.

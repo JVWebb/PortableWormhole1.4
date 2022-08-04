@@ -1,7 +1,7 @@
 displayName = Portable Wormhole
-author = DaeCatt
+author = DaeCatt, Stonga
 version = 1.0
-homepage = https://github.com/DaeCatt/PortableWormhole
+homepage = https://github.com/JVWebb/PortableWormhole1.4
 hideCode = false
 hideResources = false
 includeSource = true

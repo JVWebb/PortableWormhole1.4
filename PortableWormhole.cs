@@ -3,6 +3,8 @@ using Microsoft.Xna.Framework.Graphics;
 using MonoMod.Cil;
 using System;
 using Terraria;
+using Terraria.Audio;
+using Terraria.GameContent;
 using Terraria.ID;
 using Terraria.Localization;
 using Terraria.ModLoader;
@@ -46,8 +48,12 @@ namespace PortableWormhole {
 			IL.Terraria.Player.HasUnityPotion += HookHasUnityPotion;
 			IL.Terraria.Player.TakeUnityPotion += HookTakeUnityPotion;
 		}
+	}
 
-		public override void PostDrawFullscreenMap(ref string mouseText) {
+	public class PortableWormholeSystem : ModSystem
+    {
+		public override void PostDrawFullscreenMap(ref string mouseText)/* tModPorter Note: Removed. Use ModSystem.PostDrawFullscreenMap or a ModMapLayer */
+		{
 			PortableWormholePlayer modPlayer = Main.LocalPlayer.GetModPlayer<PortableWormholePlayer>();
 			// Don't do anything the player does not have the portable wormhole
 			if (!modPlayer.hasPortableWormhole)
@@ -61,17 +67,18 @@ namespace PortableWormhole {
 			float dx = Main.screenWidth / 2 - Main.mapFullscreenPos.X * Main.mapFullscreenScale;
 			float dy = Main.screenHeight / 2 - Main.mapFullscreenPos.Y * Main.mapFullscreenScale;
 
-			for (int i = 0; i < Main.npc.Length; i++) {
+			for (int i = 0; i < Main.npc.Length; i++)
+			{
 				// Only check active NPCs that are set to townNPC.
 				if (!Main.npc[i].active || !Main.npc[i].townNPC)
 					continue;
 
 				// Ensure this NPC has a head texture
-				int headIndex = NPC.TypeToHeadIndex(Main.npc[i].type);
+				int headIndex = NPC.TypeToDefaultHeadIndex(Main.npc[i].type);
 				if (headIndex <= 0)
 					continue;
 
-				Texture2D headTexture = Main.npcHeadTexture[headIndex];
+				Texture2D headTexture = TextureAssets.NpcHead[headIndex].Value;
 
 				// Calculate the NPCs position on the screen
 				float x = dx + scale * (Main.npc[i].position.X + Main.npc[i].width / 2);
@@ -83,20 +90,22 @@ namespace PortableWormhole {
 				float maxY = minY + headTexture.Height * Main.UIScale;
 
 				// Determine whether the player is hovering this NPCs head.
-				if (Main.mouseX >= minX && Main.mouseX <= maxX && Main.mouseY >= minY && Main.mouseY <= maxY) {
+				if (Main.mouseX >= minX && Main.mouseX <= maxX && Main.mouseY >= minY && Main.mouseY <= maxY)
+				{
 					SpriteEffects effect = Main.npc[i].direction > 0 ? SpriteEffects.FlipHorizontally : SpriteEffects.None;
 
 					Main.spriteBatch.Draw(headTexture, new Vector2(x, y), headTexture.Frame(), Color.White, 0f, headTexture.Frame().Size() / 2, Main.UIScale + 0.5f, effect, 0f);
 
 					if (!Main.instance.unityMouseOver)
-						Main.PlaySound(SoundID.MenuTick);
+						SoundEngine.PlaySound(SoundID.MenuTick);
 
 					Main.instance.unityMouseOver = true;
 
 					// Change the tooltip to "Teleport to ..."
-					mouseText = Language.GetTextValue("Game.TeleportTo", Main.npc[i].FullName);
+					//mouseText = Language.GetTextValue("Game.TeleportTo", Main.npc[i].FullName);
 
-					if (Main.mouseLeft && Main.mouseLeftRelease) {
+					if (Main.mouseLeft && Main.mouseLeftRelease)
+					{
 						Main.mouseLeftRelease = false;
 						Main.mapFullscreen = false;
 
@@ -117,11 +126,11 @@ namespace PortableWormhole {
 
 	public class PortableWormhole : ModItem {
 		public override void SetDefaults() {
-			item.width = 14;
-			item.height = 14;
-			item.maxStack = 1;
-			item.consumable = false;
-			item.rare = ItemRarityID.Orange;
+			Item.width = 15;
+			Item.height = 15;
+			Item.maxStack = 1;
+			Item.consumable = false;
+			Item.rare = ItemRarityID.Orange;
 		}
 
 		public override bool CanUseItem(Player player) {
@@ -134,11 +143,10 @@ namespace PortableWormhole {
 		}
 
 		public override void AddRecipes() {
-			ModRecipe recipe = new ModRecipe(mod);
-			recipe.AddIngredient(ItemID.WormholePotion, 30);
-			recipe.AddTile(TileID.CrystalBall);
-			recipe.SetResult(this);
-			recipe.AddRecipe();
+			Recipe recipe = CreateRecipe();
+			recipe.AddIngredient(ItemID.DirtBlock, 1);
+			//recipe.AddTile(TileID.CrystalBall);
+			recipe.Register();
 		}
 	}
 
