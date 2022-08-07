@@ -1,14 +1,14 @@
-using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Terraria;
 using Terraria.GameContent;
+using Terraria.GameInput;
 using Terraria.ID;
 using Terraria.Localization;
 using Terraria.ModLoader;
 
 //Original code by DaeCatt. ported to 1.4 and modified by Stonga. all other comments are written by DaeCatt unless specified otherwise
 
-namespace PortableWormholeBeta
+namespace PortableWormhole
 {
     public class PortableWormholeMod : Mod
     {
@@ -45,13 +45,15 @@ namespace PortableWormholeBeta
         {
             PortableWormholePlayer modPlayer = Main.LocalPlayer.GetModPlayer<PortableWormholePlayer>();
             // Don't do anything the player does not have the portable wormhole
-            if (!modPlayer.hasPortableWormhole)
+            //also dont do anything if player is not clicking, to prevent double-cursor issue -Stonga
+            if (!modPlayer.hasPortableWormhole || !Main.mouseLeft || !Main.mouseLeftRelease)
                 return;
 
             // Try to avoid falsely highlighting NPCs when the player intends to teleport to another player.
             if (Main.netMode == NetmodeID.MultiplayerClient && Main.LocalPlayer.team > 0 && Main.instance.unityMouseOver)
                 return;
 
+            PlayerInput.SetZoom_Unscaled();
             float scale = Main.mapFullscreenScale / 16f;
             float dx = Main.screenWidth / 2 - Main.mapFullscreenPos.X * Main.mapFullscreenScale;
             float dy = Main.screenHeight / 2 - Main.mapFullscreenPos.Y * Main.mapFullscreenScale;
@@ -81,28 +83,18 @@ namespace PortableWormholeBeta
                 // Determine whether the player is hovering this NPCs head.
                 if (Main.mouseX >= minX && Main.mouseX <= maxX && Main.mouseY >= minY && Main.mouseY <= maxY)
                 {
-                    SpriteEffects effect = Main.npc[i].direction > 0 ? SpriteEffects.FlipHorizontally : SpriteEffects.None;
-
-                    Main.spriteBatch.Draw(headTexture, new Vector2(x, y), headTexture.Frame(), Color.White, 0f, headTexture.Frame().Size() / 2, Main.UIScale + 0.5f, effect, 0f);
-
-                    //if (!Main.instance.unityMouseOver)
-                    //	SoundEngine.PlaySound(SoundID.MenuTick);
-
-                    //Main.instance.unityMouseOver = true;
-
-                    // Change the tooltip to "Teleport to ..."
-                    mouseText = Language.GetTextValue("Game.TeleportTo", Main.npc[i].FullName);
 
                     if (Main.mouseLeft && Main.mouseLeftRelease)
                     {
                         Main.mouseLeftRelease = false;
                         Main.mapFullscreen = false;
 
+                        // Teleport the player to the NPC
+                        Main.player[Main.myPlayer].Teleport(Main.npc[i].position);
+
                         // Display "Player has teleported to ..." message
                         Main.NewText(Language.GetTextValue("Game.HasTeleportedTo", Main.player[Main.myPlayer].name, Main.npc[i].FullName), 255, 255, 0);
 
-                        // Teleport the player to the NPC
-                        Main.player[Main.myPlayer].Teleport(Main.npc[i].position);
                     }
 
                     return;
@@ -115,6 +107,7 @@ namespace PortableWormholeBeta
     {
         public override void SetStaticDefaults()
         {
+            DisplayName.SetDefault("Portable Wormhole");
             Tooltip.SetDefault("Teleport to party members or NPCs by clicking their head on the fullscreen map\nWorks in Piggy Bank, Safe, Void Vault, and Defender's Forge");
         }
 
@@ -125,6 +118,7 @@ namespace PortableWormholeBeta
             Item.maxStack = 1;
             Item.consumable = false;
             Item.rare = ItemRarityID.Orange;
+            Item.value = Item.sellPrice(0, 0, 77, 0);
         }
 
         public override bool CanUseItem(Player player)
@@ -150,12 +144,14 @@ namespace PortableWormholeBeta
     public class PortableWormholePlayer : ModPlayer
     {
         public bool hasPortableWormhole = false;
+
         public override void ResetEffects()
         {
             hasPortableWormhole = false;
         }
-        
+
         public override void UpdateEquips()
+        //go through each personal storage bank and check if the Portable Wormhole item is present -Stonga
         {
             base.UpdateEquips();
 
