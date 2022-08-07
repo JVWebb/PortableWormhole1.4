@@ -3,5 +3,7 @@ This mod adds a Portable Wormhole mirror which is crafted from 30 Wormhole Potio
 
 The Portable Wormhole is non-consumable and lets you teleport to teammates as if you had a wormhole potion. It also lets you teleport to town NPCs.
 
+It works from within your inventory, Piggy Bank, Safe, Void Vault, or Defender's Forge.
 
-Original mod by DaeCatt (https://github.com/DaeCatt/PortableWormhole). Ported to 1.4 and resprited by Stonga
+
+Original mod by DaeCatt. Ported to 1.4, modified, and resprited by Stonga
