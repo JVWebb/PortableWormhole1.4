@@ -1,6 +1,6 @@
 displayName = Portable Wormhole
 author = Stonga, DaeCatt
-version = 1.4
+version = 1.4.1
 homepage = https://github.com/JVWebb/PortableWormhole1.4
 hideCode = false
 hideResources = false
