@@ -1,7 +1,7 @@
 ﻿using System;
 using System.ComponentModel;
-using Terraria.ModLoader.Config;
 using Terraria;
+using Terraria.ModLoader.Config;
 
 namespace PortableWormhole
 {
@@ -31,6 +31,15 @@ namespace PortableWormhole
         [Range(0, 300)]
         [DefaultValue(30)]
         public int NumRequiredWormholePotions;
+
+        public override bool AcceptClientChanges(ModConfig pendingConfig, int whoAmI, ref string message)
+        {
+            if (Netplay.HasClients && Netplay.Clients[whoAmI].Socket.GetRemoteAddress().IsLocalHost())
+            {
+                return true;
+            }
+            return false;
+        }
 
     }
 }
