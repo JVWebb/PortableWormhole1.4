@@ -1,4 +1,4 @@
-This mod adds a Portable Wormhole mirror which is crafted from 30 Wormhole Potions at a Crystal Ball.
+This mod adds a Portable Wormhole mirror which is crafted from 30 Wormhole Potions at a Crystal Ball. (configurable)
 
 The Portable Wormhole is non-consumable and lets you teleport to teammates as if you had a wormhole potion. It also lets you teleport to town NPCs.
 

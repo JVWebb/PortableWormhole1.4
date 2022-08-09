@@ -44,9 +44,12 @@ namespace PortableWormhole
         public override void PostDrawFullscreenMap(ref string mouseText)
         {
             PortableWormholePlayer modPlayer = Main.LocalPlayer.GetModPlayer<PortableWormholePlayer>();
+            PortableWormholeConfig modConfig = ModContent.GetInstance<PortableWormholeConfig>();
+
             // Don't do anything the player does not have the portable wormhole
             //also dont do anything if player is not clicking, to prevent double-cursor issue -Stonga
-            if (!modPlayer.hasPortableWormhole || !Main.mouseLeft || !Main.mouseLeftRelease)
+            //also also dont do anything if config disallows teleporting to NPCs -Stonga
+            if (!modPlayer.hasPortableWormhole || !Main.mouseLeft || !Main.mouseLeftRelease || !modConfig.AllowTeleportingToNPCs)
                 return;
 
             // Try to avoid falsely highlighting NPCs when the player intends to teleport to another player.
@@ -105,6 +108,7 @@ namespace PortableWormhole
 
     public class PortableWormhole : ModItem
     {
+        PortableWormholeConfig modConfig = ModContent.GetInstance<PortableWormholeConfig>();
         public override void SetStaticDefaults()
         {
             DisplayName.SetDefault("Portable Wormhole");
@@ -135,14 +139,19 @@ namespace PortableWormhole
         public override void AddRecipes()
         {
             Recipe recipe = CreateRecipe();
-            recipe.AddIngredient(ItemID.WormholePotion, 30);
-            recipe.AddTile(TileID.CrystalBall);
+            recipe.AddIngredient(ItemID.WormholePotion, modConfig.NumRequiredWormholePotions);
+            if (modConfig.RequireCrystalBall)
+            {
+                recipe.AddTile(TileID.CrystalBall);
+            }
             recipe.Register();
         }
     }
 
     public class PortableWormholePlayer : ModPlayer
     {
+        PortableWormholeConfig modConfig = ModContent.GetInstance<PortableWormholeConfig>();
+
         public bool hasPortableWormhole = false;
 
         public override void ResetEffects()
@@ -153,6 +162,11 @@ namespace PortableWormhole
         public override void UpdateEquips()
         //go through each personal storage bank and check if the Portable Wormhole item is present -Stonga
         {
+            if (!modConfig.AllowUsingFromBanks)
+            {
+                return;
+            }
+
             base.UpdateEquips();
 
             Item[] PiggyBank = Player.bank.item;
