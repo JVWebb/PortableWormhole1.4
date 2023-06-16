@@ -8,3 +8,5 @@ It works from within your inventory, Piggy Bank, Safe, Void Vault, or Defender's
 Functionality can be changed via ingame mod config.
 
 Original mod by DaeCatt. Ported to 1.4, modified, and resprited by Stonga
+
+Steam workshop page: https://steamcommunity.com/sharedfiles/filedetails/?id=2845703054
