@@ -15,18 +15,18 @@ namespace PortableWormhole
 
         public override void Load()
         {
-            On.Terraria.Player.HasUnityPotion += HasPortableWormhole;
-            On.Terraria.Player.TakeUnityPotion += TakePortableWormhole;
+            Terraria.On_Player.HasUnityPotion += HasPortableWormhole;
+            Terraria.On_Player.TakeUnityPotion += TakePortableWormhole;
         }
 
-        private static bool HasPortableWormhole(On.Terraria.Player.orig_HasUnityPotion orig, Player player)
+        private static bool HasPortableWormhole(Terraria.On_Player.orig_HasUnityPotion orig, Player player)
         //we allow the player to use wormhole potion functions if they have the Portable Wormhole item instead. -Stonga
         {
             PortableWormholePlayer modPlayer = player.GetModPlayer<PortableWormholePlayer>();
 
             return modPlayer.hasPortableWormhole || orig(player);
         }
-        private static void TakePortableWormhole(On.Terraria.Player.orig_TakeUnityPotion orig, Player player)
+        private static void TakePortableWormhole(Terraria.On_Player.orig_TakeUnityPotion orig, Player player)
         //we don't want to consume a wormhole potion if the player has the Portable Wormhole item -Stonga
         {
             PortableWormholePlayer modPlayer = player.GetModPlayer<PortableWormholePlayer>();
@@ -109,11 +109,6 @@ namespace PortableWormhole
     public class PortableWormhole : ModItem
     {
         PortableWormholeConfig modConfig = ModContent.GetInstance<PortableWormholeConfig>();
-        public override void SetStaticDefaults()
-        {
-            DisplayName.SetDefault("Portable Wormhole");
-            Tooltip.SetDefault("Teleport to party members or NPCs by clicking their head on the fullscreen map\nWorks in Piggy Bank, Safe, Void Vault, and Defender's Forge");
-        }
 
         public override void SetDefaults()
         {

@@ -1,0 +1,14 @@
+Mods: {
+	PortableWormhole: {
+		Items: {
+			PortableWormhole: {
+				DisplayName: Portable Wormhole
+				Tooltip:
+					'''
+					Teleport to party members or NPCs by clicking their head on the fullscreen map
+					Works in Piggy Bank, Safe, Void Vault, and Defender's Forge (if enabled)
+					'''
+			}
+		}
+	}
+}
